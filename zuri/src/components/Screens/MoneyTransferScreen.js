@@ -9,7 +9,7 @@ const MoneyTransferScreen = () => {
     { name: 'M-Pesa to My Account', image: require('../assets/icons8-mpesa-48.png'), section: 'Send' },
     { name: 'Other Accounts', image: require('../assets/otheraccount.png'), section: 'Send' },
     { name: 'Pesalink', image: require('../assets/pesalink-logo-1200x800.jpg'), section: 'Send' },
-    { name: 'Send Cash by Code', image: require('../assets/icons8-headset-48.png'), section: 'Send' },
+    
     { name: 'SWIFT', image: require('../assets/swift.png'), section: 'Send' },
     { name: 'RTGS', image: require('../assets/rtgs.jpeg'), section: 'Send' },
     { name: 'Cardless Withdrawal', image: require('../assets/Cardless.png'), section: 'Withdraw' },

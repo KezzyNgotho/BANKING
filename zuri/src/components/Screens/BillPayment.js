@@ -1,59 +1,133 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, ScrollView, Image, TouchableWithoutFeedback, Text } from 'react-native';
+import { Card, Title } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
-const BillPaymentsScreen = () => {
-  const [amount, setAmount] = useState('');
-  const [isRecurring, setIsRecurring] = useState(false);
+const BillsScreen = () => {
+  const navigation = useNavigation();
 
-  const makePayment = () => {
-    // Implement logic to make a bill payment
+  const navigateToScreen = (screenName) => {
+    navigation.navigate(screenName);
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Bill Payments</Text>
-      <TextInput
-        placeholder="Enter amount"
-        value={amount}
-        onChangeText={(text) => setAmount(text)}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <View style={styles.checkboxContainer}>
-        <Text>Recurring Payment</Text>
-        <Button
-          title={isRecurring ? 'On' : 'Off'}
-          onPress={() => setIsRecurring(!isRecurring)}
-        />
+  const handleBack = () => {
+    // Navigate back to the previous screen
+    navigation.goBack();
+  };
+
+  const handleCancel = () => {
+    setPaymentAmount('');
+    setPaymentReason('');
+    setFeedback('');
+  };
+
+  const Section = ({ title, children }) => (
+    <View style={styles.sectionContainer}>
+      <View style={styles.header}>
+        <TouchableWithoutFeedback onPress={handleBack}>
+          <Image
+            source={require('../assets/icons8-back-50.png')}
+            style={styles.icon}
+          />
+        </TouchableWithoutFeedback>
+        <Text style={styles.title}>Zuri Till Payment</Text>
+        <TouchableWithoutFeedback onPress={handleCancel}>
+          <Image
+            source={require('../assets/icons8-cancel-24.png')}
+            style={styles.icon}
+          />
+        </TouchableWithoutFeedback>
       </View>
-      <Button title="Make Payment" onPress={makePayment} />
+      <Title style={styles.sectionTitle}>{title}</Title>
+      <View style={styles.modulesContainer}>{children}</View>
     </View>
+  );
+
+  const Module = ({ title, icon, onPress }) => (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <Card style={styles.moduleCard}>
+        <Card.Content>
+          <Image source={icon} style={styles.moduleImage} />
+          <Title style={styles.moduleTitle}>{title}</Title>
+        </Card.Content>
+      </Card>
+    </TouchableWithoutFeedback>
+  );
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Section title="Buy Goods and Services">
+        <Module title="Zuri Till" icon={require('../assets/Cardless.png')} onPress={() => navigateToScreen('ZuriTill')} />
+        <Module title="Airtime & Data" icon={require('../assets/Airtime.jpeg')} onPress={() => navigateToScreen('Airtime')} />
+        <Module title="M-Pesa Till" icon={require('../assets/icons8-mpesa-48.png')} />
+        <Module title="M-Pesa Paybill" icon={require('../assets/icons8-mpesa-48.png')} />
+      </Section>
+
+      <Section title="Govt Bills">
+        <Module title="KRA" icon={require('../assets/kra.webp')} />
+        <Module title="E-Citizen" icon={require('../assets/e-citizen.jpg')} />
+      </Section>
+
+      <Section title="Utility Bills">
+        <Module title="KPLC" icon={require('../assets/KPLC.webp')} />
+        <Module title="Zuku TV" icon={require('../assets/Zuku.jpg')} />
+        <Module title="DSTV" icon={require('../assets/dstv.webp')} />
+        <Module title="GOtv" icon={require('../assets/gotv.jpg')} />
+        <Module title="StarTimes" icon={require('../assets/Startimes.jpg')} />
+      </Section>
+
+      <Section title="Institutional Bills">
+        <Module title="School Fees" icon={require('../assets/fees.jpeg')} />
+        <Module title="Rent Payment" icon={require('../assets/rent.jpeg')} />
+        <Module title="More" icon={require('../assets/icons8-support-40.png')} />
+      </Section>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   container: {
-    flex: 1,
     padding: 16,
   },
-  header: {
-    fontSize: 24,
+  sectionContainer: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'black',
     fontWeight: 'bold',
-    marginBottom: 16,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 16,
-    borderRadius: 8,
-  },
-  checkboxContainer: {
+  modulesContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 16,
+  },
+  moduleCard: {
+    width: '47%',
+    height: 100,
+    marginBottom: 10,
+    elevation: 1,
+    borderRadius: 1,
+    backgroundColor: 'white',
+  },
+  moduleImage: {
+    width: 50,
+    height: 50,
+    alignSelf: 'center',
+  },
+  moduleTitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
 
-export default BillPaymentsScreen;
+export default BillsScreen;

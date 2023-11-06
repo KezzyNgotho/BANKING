@@ -10,19 +10,12 @@ const DashboardScreen = ({ navigation }) => {
  
   const fetchUserData = async () => {
     try {
-      const userId = firebase.auth().currentUser.uid; // Get the currently logged-in user's UID
+      const userId = firebase.auth().currentUser.uid;
       const userDoc = await firebase.firestore().collection('users').doc(userId).get();
 
       if (userDoc.exists) {
         const userData = userDoc.data();
-        // Extract the user's name and generate initials
-        const userName = userData.name;
-        const initials = userName
-          .split(' ')
-          .map((name) => name.charAt(0))
-          .join('');
-        // Update the user data with initials
-        setUserData({ ...userData, initials });
+        setUserData(userData);
       } else {
         console.error('User data not found.');
       }
@@ -30,33 +23,104 @@ const DashboardScreen = ({ navigation }) => {
       console.error('Error fetching user data:', error);
     }
   };
+  const fetchAccountOverview = async () => {
+    try {
+      const userId = firebase.auth().currentUser.uid;
+      const totalsCollection = await firebase
+        .firestore()
+        .collection('totals'); // Reference the "totals" collection
+  
+      // Retrieve all documents in the "totals" collection
+      const querySnapshot = await totalsCollection.get();
+  
+      if (!querySnapshot.empty) {
+        // Initialize an array to store account overview data
+        const accountOverview = [];
+  
+        querySnapshot.forEach((doc) => {
+          const accountType = doc.id; // Document ID is the account type
+          const amount = doc.data().amount;
+  
+          // Convert amount to a formatted string if necessary
+          const balance = `KSH ${amount.toFixed(2)}`;
+  
+          // Create an account overview object for each account type
+          const accountTypeOverview = {
+            accountName: accountType,
+            balance,
+            visible: true,
+          };
+  
+          accountOverview.push(accountTypeOverview);
+        });
+  
+        // Update the state with the aggregated data
+        setAccountOverview(accountOverview);
+      } else {
+        console.error('No account totals found in the "totals" collection.');
+      }
+    } catch (error) {
+      console.error('Error fetching account overview data:', error);
+    }
+  };
+  
+  
+ const fetchTransactionHistory = async () => {
+  try {
+    const userId = firebase.auth().currentUser.uid;
+    const transactionsCollection = await firebase
+      .firestore()
+      .collection('transactions') // Replace with the correct collection name for transactions
+      .where('userId', '==', userId) // Assuming you have a 'userId' field in your transactions
+      .get();
 
-  // Fetch user data when the component mounts
+    const transactionHistory = transactionsCollection.docs.map((doc) => {
+      const data = doc.data();
+      const timestamp = data.timestamp; // Assuming 'timestamp' is the field name in Firestore
+      const date = timestamp ? timestamp.toDate() : null;
+      const dateString = date ? date.toISOString().split('T')[0] : '';
+      return {
+        date: dateString,// Convert timestamp to ISO date string// Convert timestamp to ISO date string // Convert timestamp to ISO date string
+        description: data.type, // Assuming 'type' in Firebase corresponds to 'description'
+        amount: `KSH ${parseFloat(data.amount).toFixed(2)}`,
+      };
+    });
+    console.log('Fetched transaction history:', transactionHistory);
+    setTransactionHistory(transactionHistory);
+  } catch (error) {
+    console.error('Error fetching transaction history:', error);
+  }
+};
+
+
   useEffect(() => {
     fetchUserData();
+    fetchAccountOverview();
+    fetchTransactionHistory();
   }, []);
 
 
   // Demo account overview data
-  const [accountOverview, setAccountOverview] = useState([
+  /* const [accountOverview, setAccountOverview] = useState([
     { accountName: 'Checking Account', balance: '$5,000', visible: true },
     { accountName: 'Savings Account', balance: '$10,000', visible: true },
     { accountName: 'Credit Card', balance: '$-2,000', visible: true },
   ]);
 
-
+ */
+  const [accountOverview, setAccountOverview] = useState([]);
   
   // Demo transaction history data
  
   /*   { date: '2023-09-03', description: 'ATM Withdrawal', amount: '$100.00' }, */
     // Add more transactions as needed
   
-  const [transactionHistory, setTransactionHistory] = useState([
-    { date: '2023-09-01', description: 'Purchase at Store A', amount: '$50.00' },
+  const [transactionHistory, setTransactionHistory] = useState([])
+    /* { date: '2023-09-01', description: 'Purchase at Store A', amount: '$50.00' },
     { date: '2023-09-02', description: 'Online Payment', amount: '$25.00' },
     // Add more transactions as needed
   ]);
-
+ */
   // State to control visibility of view transactions section
   const [showTransactions, setShowTransactions] = useState(false);
 

@@ -1,11 +1,11 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTheme } from "react-native-paper";
-
-import BottomTabNavigator from "./TabNavigator";
+import ZuriTillScreen from "../Screens/ZuriTillScreen";
+import { BottomTabNavigator } from "./TabNavigator";
 import airtelScreen from '../Screens/AirtelScreen'
-import LoginScreen from '../Screens/LoginScreen';
-import RegistrationScreen from "../Screens/RegistrationScreen";
+ import LoginScreen from '../Screens/LoginScreen';
+import RegistrationScreen from "../Screens/RegistrationScreen"; 
 import DashboardScreen from "../Screens/DashboardScreen";
 import AccountOverviewScreen from "../Screens/AccountOverviewScreen";
 import TransactionHistoryScreen from "../Screens/TransactionHistory";
@@ -39,9 +39,8 @@ const MainStackNavigator = () => {
       <Stack.Screen options={{ headerShown: false }} name="Bills" component={BillManagementScreen} />
       <Stack.Screen options={{ headerShown: false }} name="Support" component={CustomerSupportScreen} />
       <Stack.Screen options={{ headerShown: false }} name="ReceiveMoney" component={DepositScreen} />
-    
-      <Stack.Screen options={{ headerShown: false }} name="Mpesa" component={MpesaScreen} />
-    
+      <Stack.Screen options={{ headerShown: false }} name="ZuriTill" component={ZuriTillScreen} />
+    <Stack.Screen options={{ headerShown: false }} name="Mpesa" component={MpesaScreen} />
       <Stack.Screen options={{ headerShown: false }} name="Airtel" component={airtelScreen} />
     </Stack.Navigator>
   );
@@ -68,4 +67,4 @@ const LoginStackNavigator = () => {
 }
 
 
-export { MainStackNavigator, LoginStackNavigator,  };
+export{ MainStackNavigator,LoginStackNavigator};

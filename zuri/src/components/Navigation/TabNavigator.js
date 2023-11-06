@@ -3,18 +3,18 @@ import React from "react";
 import { useTheme } from "react-native-paper";
 import { Image } from "react-native";
 
-
 import DashboardScreen from "../Screens/DashboardScreen";
 import BillPaymentsScreen from "../Screens/BillPayment";
 import FundTransferScreen from "../Screens/MoneyTransferScreen";
 import { MainStackNavigator, ContactStackNavigator, } from "./StackNavigator";
+
 import BudgetTrackingScreen from "../Screens/BudgetTrackingScreen";
 import MoneyTransferScreen from "../Screens/MoneyTransferScreen";
 
-const Tab = createMaterialBottomTabNavigator();
-
 const BottomTabNavigator = () => {
   const { colors } = useTheme();
+
+  const Tab = createMaterialBottomTabNavigator();
 
   return (
     <Tab.Navigator
@@ -64,4 +64,4 @@ const BottomTabNavigator = () => {
 
 
  
-export default BottomTabNavigator;
+export {BottomTabNavigator};

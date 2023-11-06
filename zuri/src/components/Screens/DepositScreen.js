@@ -18,38 +18,34 @@ const DepositScreen = () => {
   };
  */
   const handleDeposit = () => {
-    // Get the currently authenticated user
     const user = firebase.auth().currentUser;
   
     if (user) {
-      // Create a reference to the Firestore collection where you want to store the data
       const db = firebase.firestore();
-      const depositsCollection = db.collection('MY ACCOUNT');
+      const depositsCollection = db.collection('accountOverview');
       const transactionsCollection = db.collection('transactions');
+      const totalsCollection = db.collection('totals'); // Create a reference to the "totals" collection
   
-      // Define the deposit data
       const depositData = {
         userId: user.uid,
-        amount: parseFloat(amount), // Assuming amount is a string, convert it to a number
+        amount: parseFloat(amount),
         phoneNumber,
         accountType: selectedAccount,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       };
   
-      // Add a new document to the deposits collection
       depositsCollection
         .add(depositData)
         .then(() => {
-          // Reset the form fields after a successful deposit
-          setAmount(''); // Clear the amount field
-          setPhoneNumber(''); // Clear the phone number field
-          setSelectedAccount('savings'); // Reset the selected account
+          setAmount('');
+          setPhoneNumber('');
+          setSelectedAccount('savings');
   
           // Record the deposit in the transactions collection
           transactionsCollection
             .add({
               ...depositData,
-              type: 'deposit', // Add a type field to indicate it's a deposit
+              type: 'deposit',
             })
             .then(() => {
               alert(`Depositing ${amount} KES to the ${selectedAccount} account from ${phoneNumber}`);
@@ -57,13 +53,36 @@ const DepositScreen = () => {
             .catch((error) => {
               console.error('Error recording deposit in transactions:', error);
             });
+  
+          // Retrieve the current total amount for the selected account type
+          totalsCollection
+            .doc(selectedAccount) // Use the account type as the document ID
+            .get()
+            .then((doc) => {
+              const currentTotal = doc.exists ? doc.data().amount : 0;
+              const newTotal = currentTotal + parseFloat(amount);
+  
+              // Update the total amount for the selected account type in Firestore
+              totalsCollection
+                .doc(selectedAccount)
+                .set({ amount: newTotal })
+                .then(() => {
+                  console.log(`Total amount for ${selectedAccount} updated successfully.`);
+                })
+                .catch((error) => {
+                  console.error(`Error updating total amount for ${selectedAccount}:`, error);
+                });
+            })
+            .catch((error) => {
+              console.error(`Error retrieving current total amount for ${selectedAccount}:`, error);
+            });
         })
         .catch((error) => {
           console.error('Error saving deposit:', error);
         });
     } else {
       alert('User not authenticated. Please log in.');
-    }
+    };
   };
   
   const handleBackPress = () => {

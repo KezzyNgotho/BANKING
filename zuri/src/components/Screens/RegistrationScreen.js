@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image,Modal,Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { Button } from 'react-native-elements';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 /* import firebase from '../firebase'; */
 import firebase  from '../firebase'
@@ -21,6 +22,10 @@ const RegistrationScreen = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const navigation = useNavigation(); // Initialize navigation
   const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const handleLogin  = () => {
+    // You can navigate to the registration screen or any other screen for user registration
+    navigation.navigate('Login');
+  };
 
   const SuccessModal = () => {
     return (
@@ -248,6 +253,12 @@ const RegistrationScreen = () => {
       </TouchableOpacity>
     
       <SuccessModal />
+      <Button
+        title="Already have an account? Login"
+        onPress={handleLogin}
+        type="clear"
+        titleStyle={styles.registerButton1}
+      />
     </ScrollView>
     
   );
@@ -330,6 +341,10 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     color:'white',
     marginRight:20,
+  },
+  registerButton1: {
+    color: '#007bff', // Customize button text color
+    fontWeight: 'bold',
   },
 });
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Input, Button, Text } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../firebase';
-
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -37,23 +37,33 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Login</Text>
-      <TextInput
-        placeholder="Email"
+      <Text h3 style={styles.header}>Login</Text>
+      <Input
+        label="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
-        style={styles.input}
+        labelStyle={styles.label}
       />
-      <TextInput
-        placeholder="Password"
+      <Input
+        label="Password"
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
-        style={styles.input}
+        labelStyle={styles.label}
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Forgot Password" onPress={handleForgotPassword} />
-      <Button title="Don't have an account? Register" onPress={handleRegister} />
+      <Button title="Login" onPress={handleLogin} buttonStyle={styles.button} />
+      <Button
+        title="Forgot Password"
+        onPress={handleForgotPassword}
+        type="clear"
+        titleStyle={styles.forgotPasswordButton}
+      />
+      <Button
+        title="Don't have an account? Register"
+        onPress={handleRegister}
+        type="clear"
+        titleStyle={styles.registerButton}
+      />
     </View>
   );
 };
@@ -62,20 +72,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
   },
   header: {
-    fontSize: 24,
     marginBottom: 20,
+    textAlign: 'center',
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
+  label: {
+    color: '#007bff', // Customize label text color
+  },
+  button: {
+    backgroundColor: '#007bff', // Customize button background color
+    marginTop: 10,
+  },
+  forgotPasswordButton: {
+    color: '#007bff', // Customize button text color
+    fontWeight: 'bold',
+  },
+  registerButton: {
+    color: '#007bff', // Customize button text color
+    fontWeight: 'bold',
   },
 });
 
